@@ -175,7 +175,6 @@ void startGame()
 		system("cls");
 	}
 }
-
 int main()
 {
 	startGame();
