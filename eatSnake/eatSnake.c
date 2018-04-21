@@ -25,7 +25,7 @@ void initMap()
 		}
 	}
 }
-/* set a random print point ih the background */
+/* set a random print point in the background */
 int a = -1, b = -1;
 int foodFlag = 0;
 void setRandNum()
@@ -63,13 +63,20 @@ void printMap()
 		printf("\n");
 	}
 }
+void startMsg()
+{
+	printf
+	("press '2(top)', '8(down)', '4(left)', 6(right)'\nor 'w(top)', 'a(left)', 's(down)', 'd(right)'\nto control the snake\n");
+}
+
 int sx = 1, sy = 1, ssx, ssy, sssx, sssy;
 int l = 3;
 char input = '6';
 void setSnakeNum()
 {
 	//	mapArr[sx-1][sy] =mapArr[sx][sy];
-	ssx = sx, ssy = sy, sssx = sx, sssy = sy;
+	ssx = sx, ssy = sy; 
+	//sssx = sx, sssy = sy;
 	if (_kbhit())
 	{
 		int a = _getch();
@@ -81,35 +88,31 @@ void setSnakeNum()
 	}
 	switch (input)
 	{
-	case '2':
+	case '2':    /* up */
 	case 'w':
 		ssy = sy--;
 
 		break;
-	case '8':
+	case '8':   /* down */
 	case 's':
 		ssy = sy++;
-
+		
 		break;
-	case '4':
+	case '4':   /*  left */
 	case 'a':
 		ssx = sx--;
 
 		break;
-	case '6':
+	case '6':   /* right */
 	case 'd':
 		ssx = sx++;
 
 		break;
 	}
-	mapArr[sx][sy] = 2; /* head */
+	mapArr[sx][sy] = 2;   /* head */
 	mapArr[ssx][ssy] = 2;
+
 	mapArr[sssx][sssy] = 2;
-}
-void startMsg()
-{
-	printf
-	("press '2(top)', '8(down)', '4(left)', 6(right)'\nor 'w(top)', 'a(left)', 's(down)', 'd(right)'\nto control the snake\n");
 }
 void startGame()
 {
