@@ -1,11 +1,10 @@
-#include<stdio.h>
+#include <stdio.h>
+#include<Windows.h>
 #include<conio.h>
 #include<stdlib.h>
-#include<Windows.h>
-#include<time.h>
 #define X 50
 #define Y 15
-#define SPEED 300000
+#define SPEED 500
 int mapArr[X][Y];
 void initMap()
 {
@@ -38,7 +37,6 @@ void setRandNum()
 	}
 	mapArr[a + 1][b + 1] = 3;
 	foodFlag = 1;
-
 }
 void printMap()
 {
@@ -65,69 +63,16 @@ void printMap()
 		printf("\n");
 	}
 }
-int x = 1, y = 1;
-int flag = 0;
-void setMoveNum()
-{
-	/*
-	x move 1 -- (X - 2 ); y move 1 -- (Y - 2) */
-	/* move x from left to right */
-	if ((y == 1 + flag) && (x < X - 2 - flag))
-	{
-		mapArr[x][y] = 2;
-		x++;
-	}
-	/* move y from top to buttom */
-	else if ((x == X - 2 - flag) && (y < Y - 2 - flag))
-	{
-		mapArr[x][y] = 2;
-		y++;
-	}
-	/* move x from right to left */
-	else if ((y == Y - 2 - flag) && (x > 1 + flag))
-	{
-		mapArr[x][y] = 2;
-		x--;
-	}
-	/* move y from buttom to top */
-	else if ((x == 1 + flag) && (y > 1 + flag))
-	{
-		mapArr[x][y] = 2;
-		y--;
-		if (y == 2 + flag)
-		{
-			flag++;
-		}
-	}
-}
-/* judge the end of moving */
-void judgeEnd()
-{
-	int i, j;
-	int tmp = 1;
-	for (j = 1; j < Y - 1; j++)
-	{
-		for (i = 1; i < X - 1; i++)
-		{
-			tmp *= mapArr[i][j];
-		}
-	}
-	// printf("%d\n", tmp);
-	if (tmp != 0)
-	{
-		flag = 0;
-	}
-}
-int sx = 1, sy = 1;
+int sx = 1, sy = 1, ssx, ssy, sssx, sssy;
 int l = 3;
 char input = '6';
-char inputB = '6';
-int belly[X * Y];
 void setSnakeNum()
 {
-	if (kbhit())
+	//	mapArr[sx-1][sy] =mapArr[sx][sy];
+	ssx = sx, ssy = sy, sssx = sx, sssy = sy;
+	if (_kbhit())
 	{
-		int a = getch();
+		int a = _getch();
 		if (a == '2' || a == '4' || a == '6' || a == '8' || a == 'w' || a == 'a' || a == 's'
 			|| a == 'd')
 		{
@@ -138,22 +83,28 @@ void setSnakeNum()
 	{
 	case '2':
 	case 'w':
-		sy--;
+		ssy = sy--;
+
 		break;
 	case '8':
 	case 's':
-		sy++;
+		ssy = sy++;
+
 		break;
 	case '4':
 	case 'a':
-		sx--;
+		ssx = sx--;
+
 		break;
 	case '6':
 	case 'd':
-		sx++;
+		ssx = sx++;
+
 		break;
 	}
-	mapArr[sx][sy] = 2;
+	mapArr[sx][sy] = 2; /* head */
+	mapArr[ssx][ssy] = 2;
+	mapArr[sssx][sssy] = 2;
 }
 void startMsg()
 {
@@ -165,12 +116,10 @@ void startGame()
 	while (1)
 	{
 		initMap();
-		/* setMoveNum(); */
 		setSnakeNum();
 		setRandNum();
 		printMap();
 		startMsg();
-		judgeEnd();
 		Sleep(SPEED);
 		system("cls");
 	}
