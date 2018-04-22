@@ -1,6 +1,7 @@
-#include <stdio.h>
+#include<stdio.h>
 #include<Windows.h>
 #include<conio.h>
+#include<time.h>
 #include<stdlib.h>
 #define X 50
 #define Y 15
