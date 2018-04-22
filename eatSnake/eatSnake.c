@@ -69,7 +69,7 @@ void startMsg()
 	("press '2(top)', '8(down)', '4(left)', 6(right)'\nor 'w(top)', 'a(left)', 's(down)', 'd(right)'\nto control the snake\n");
 }
 
-int sx = 1, sy = 1, ssx, ssy, sssx, sssy;
+int sx = 1, sy = 1, ssx, ssy;
 int l = 3;
 char input = '6';
 void setSnakeNum()
@@ -98,7 +98,7 @@ void setSnakeNum()
 		ssy = sy++;
 		
 		break;
-	case '4':   /*  left */
+	case '4':   /* left */
 	case 'a':
 		ssx = sx--;
 
@@ -112,7 +112,7 @@ void setSnakeNum()
 	mapArr[sx][sy] = 2;   /* head */
 	mapArr[ssx][ssy] = 2;
 
-	mapArr[sssx][sssy] = 2;
+	// mapArr[sssx][sssy] = 2;
 }
 void startGame()
 {
