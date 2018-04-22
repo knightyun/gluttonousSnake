@@ -1,11 +1,12 @@
-#include<stdio.h>
+﻿#include<stdio.h>
 #include<Windows.h>
 #include<conio.h>
 #include<time.h>
 #include<stdlib.h>
+#include<windows.graphics.h>
 #define X 50
 #define Y 15
-#define SPEED 500
+#define SPEED 100
 int mapArr[X][Y];
 void initMap()
 {
@@ -36,7 +37,7 @@ void setRandNum()
 	{
 		a = rand() % (X - 2), b = rand() % (Y - 2);
 	}
-	mapArr[a + 1][b + 1] = 3;
+	mapArr[a + 1][b + 1] = 3; /* set foot number 3 */
 	foodFlag = 1;
 }
 void printMap()
@@ -69,64 +70,106 @@ void startMsg()
 	printf
 	("press '2(top)', '8(down)', '4(left)', 6(right)'\nor 'w(top)', 'a(left)', 's(down)', 'd(right)'\nto control the snake\n");
 }
-
-int sx = 1, sy = 1, ssx, ssy, sssx, sssy;
-int l = 3;
-char input = '6';
+int sx = 1, sy = 1;				/* head x, y */
+int l = 4;					/* body lenth */
+int *belly[X * Y];				 /* body */
+char input = '6';         /* default direction */
 void setSnakeNum()
 {
-	//	mapArr[sx-1][sy] =mapArr[sx][sy];
-	ssx = sx, ssy = sy; 
-	//sssx = sx, sssy = sy;
 	if (_kbhit())
 	{
-		int a = _getch();
-		if (a == '2' || a == '4' || a == '6' || a == '8' || a == 'w' || a == 'a' || a == 's'
-			|| a == 'd')
+		int a = _getch();    /* if there is an input, get it; if not, go on*/
+		switch (input)
 		{
-			input = a;
+		case '2':
+		case '8':
+		case 'w':
+		case 's':
+			if (a == '4' || a == '6' || a == 'a' || a == 'd')
+				input = a;
+			break;
+		case '4':
+		case '6':
+		case 'a':
+		case 'd':
+			if (a == '2' || a == '8' || a == 'w' || a == 's')
+				input = a;
+			break;
 		}
 	}
-	switch (input)
+	switch (input)       /* judge the direction by value of input*/
 	{
 	case '2':    /* up */
 	case 'w':
-		ssy = sy--;
-
+		sy--;
 		break;
 	case '8':   /* down */
 	case 's':
-		ssy = sy++;
-		
+		sy++;
 		break;
 	case '4':   /*  left */
 	case 'a':
-		ssx = sx--;
-
+		sx--;
 		break;
 	case '6':   /* right */
 	case 'd':
-		ssx = sx++;
-
+		sx++;
 		break;
 	}
-	mapArr[sx][sy] = 2;   /* head */
-	mapArr[ssx][ssy] = 2;
+	int i;
+	for (i = l; i != 0; i--)
+	{
+		belly[i] = belly[i - 1];
+		*belly[i] = 2;
+	}
+	belly[0] = &mapArr[sx][sy];
+	*belly[0] = 2;
+}
+int overFlag = 1;
+void gameOver()
+{
 
-	mapArr[sssx][sssy] = 2;
+}
+void eatFood()
+{
+	if (*belly[0] == 3)
+	{
+		l++;
+		foodFlag = 0;
+	}
+}
+void judgeEitWall()
+{
+	if (*belly[0] == 1)
+		overFlag = 0;
+}
+void judgeEatSelf()
+{
+	if (*belly[0] == 2)
+		overFlag = 0;
 }
 void startGame()
 {
-	while (1)
+	int j;
+	for (j = 0; j < l; j++)
+	{
+		belly[j] = &mapArr[sx - j][sy];
+	}
+	while (overFlag)
 	{
 		initMap();
 		setSnakeNum();
 		setRandNum();
+		eatFood();
 		printMap();
 		startMsg();
 		Sleep(SPEED);
 		system("cls");
 	}
+	system("cls");
+	printf("Game Over !!!");
+	system("pause");
+
 }
 int main()
 {
