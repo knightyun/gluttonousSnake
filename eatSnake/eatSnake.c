@@ -4,29 +4,43 @@
 #include<time.h>
 #include<stdlib.h>
 #include<windows.graphics.h>
-#define X 50
-#define Y 20
-#define SPEED 100
-int mapArr[X][Y];
-int randX = -1, randY = -1; /* set a random food point in the background */
-int foodFlag = 0;      /* judge when to change random food point*/
+#define MAXX 10000                /* define the max width of game space */
+#define MAXY 10000                /* define the max height */
+int speed = 10;                   /* default snake move speed */
+int mapArr[MAXX][MAXY];            /* arr to store the point in the screen */
+int inputX = 50, inputY = 20;      /* default width and height */
+int randX = -1, randY = -1;        /* set a random food point in the background */
+int foodFlag = 0;                  /* judge when to change random food point*/
 int sx = 1, sy = 1;				/* body x, y point */
 int l = 0;						/* body lenth */
-int *body[X * Y];				/* body array */
-char input = '6';				/* default direction */
-int overFlag = 1;       /* judge when the game over, hit wall or eat self*/
-int moveX = 1, moveY = 1;    /* start move effect */
-int moveFlag = 0;
+int *body[MAXX * MAXY];				/* body array pointer */
+char input = '6';			     	/* default direction */
+int overFlag = 1;                 /* judge when the game over, hit wall or eat self*/
+int moveX = 1, moveY = 1;         /* start move effect */
+int moveFlag = 0;                /* restart the loop effection */
 
-void InitMap() /* initialize the background coordinate system */
+void GetSet()                    /* judge whether to edit the game setting */
+{
+	printf("\n");
+	printf("请输入游戏空间的宽度：\n(Please enter the width of game space:)\n");
+	scanf_s("%d", &inputX);	
+	printf("\n");
+	printf("请输入游戏空间的高度：\n(Please enter the height of game space:)\n");
+	scanf_s("%d", &inputY);
+	printf("\n");
+	printf("请输入游戏速度（1 到 n，1 最慢）：\nPlease enter the speed of snake moving:(1 is slowest)\n");
+	scanf_s("%d", &speed);
+}
+
+void InitMap()                   /* initialize the background coordinate system */
 {
 	int x, y;
-	for (y = 0; y < Y; y++)
+	for (y = 0; y < inputY; y++)
 	{
-		for (x = 0; x < X; x++)
+		for (x = 0; x < inputX; x++)
 
 		{
-			if ((x == 0) || (x == X - 1) || (y == 0) || (y == Y - 1))
+			if ((x == 0) || (x == inputX - 1) || (y == 0) || (y == inputY - 1))
 			{
 				mapArr[x][y] = 1;
 			}
@@ -38,12 +52,12 @@ void InitMap() /* initialize the background coordinate system */
 	}
 }
 
-void PrintMap()
+void PrintMap()            /* print every point in the arr mapArr to the screen */
 {
 	int x, y;
-	for (y = 0; y < Y; y++)
+	for (y = 0; y < inputY; y++)
 	{
-		for (x = 0; x < X; x++)
+		for (x = 0; x < inputX; x++)
 		{
 			switch (mapArr[x][y])
 			{
@@ -64,43 +78,48 @@ void PrintMap()
 	}
 }
 
-void StartMsg()
+void StartMsg()             /* start message */
 {
 	printf
-	("press '2(top)', '8(down)', '4(left)', 6(right)'\nor 'w(top)', 'a(left)', 's(down)', 'd(right)'\nto control the snake\n");
+	("'2(top)', '8(down)', '4(left)', 6(right)' 或 \n'w(top)', 'a(left)', 's(down)', 'd(right)'\n控制方向(control the direction)\n");
 }
 
-void SetRandNum()
+void SetRandNum()            /* set a random 'food' point in the screen */
 {
 	srand(time(0));
 	while ((mapArr[randX + 1][randY + 1] != 0) && (foodFlag == 0))
 	{
-		randX = rand() % (X - 2), randY = rand() % (Y - 2);
+		randX = rand() % (inputX - 2), randY = rand() % (inputY - 2);
 	}
 	mapArr[randX + 1][randY + 1] = 3;	/* set foot number 3 */
 	foodFlag = 1;
 }
 
-void SetSnakeNum()
+void SetSnakeNum()         /* the most complex and important algorithm of this game */
 {
-	if (_kbhit())
+	if (_kbhit())         /* if there is an input, get it; if not, go on	*/
 	{
-		int a = _getch();		/* if there is an input, get it; if not, go on
-								*/
+		int a = _getch();		
 		switch (input)
 		{
 		case '2':
-		case '8':
 		case 'w':
+			if (a == '4' || a == '6' || a == 'a' || a == 'd' || a == '2' || a == 'w')
+				input = a;
+			break;
+		case '8':
 		case 's':
-			if (a == '4' || a == '6' || a == 'a' || a == 'd')
+			if (a == '4' || a == '6' || a == 'a' || a == 'd' || a == '8' || a == 's')
 				input = a;
 			break;
 		case '4':
-		case '6':
 		case 'a':
+			if (a == '2' || a == '8' || a == 'w' || a == 's' || a == '4' || a == 'a')
+				input = a;
+			break;
+		case '6':
 		case 'd':
-			if (a == '2' || a == '8' || a == 'w' || a == 's')
+			if (a == '2' || a == '8' || a == 'w' || a == 's' || a == '6' || a == 'd')
 				input = a;
 			break;
 		}
@@ -125,20 +144,20 @@ void SetSnakeNum()
 		break;
 	}
 	int i;
-	for (i = l; i != 0; i--)
+	for (i = l; i != 0; i--)           /*  every point's address of body move back one point */
 	{
 		body[i] = body[i - 1];
-		*body[i] = 2;
+		*body[i] = 2;                 /* change value by pointer */
 	}
 	body[0] = &mapArr[sx][sy];
-	if ((*body[0] == 1) || (*body[0] == 2))
+	if ((*body[0] == 1) || (*body[0] == 2))    /* judge when the snake hit the wall or eat itself */
 	{
 		overFlag = 0;
 	}
-	*body[0] = 2;
+	*body[0] = 2;              /* assign the head of snake by pointer */
 }
 
-void EatFood()
+void EatFood()             /* judge when to eat food and elongate the body */
 {
 	if (*body[0] == 3)
 	{
@@ -147,17 +166,18 @@ void EatFood()
 	}
 }
 
-void StartGame()
+void StartGame()       /* start the game */
 {
 	sx = 1;
 	sy = 1;
+	l = 0;
 	input = '6';
 	int j;
-	for (j = 0; j < l; j++)
+	for (j = 0; j < l; j++)             /* assign the snake body initial address value*/
 	{
-		body[j] = &mapArr[sx - j][sy];
+		body[j] = &mapArr[sx - j][sy];   
 	}
-	while (overFlag)
+	while (overFlag)    /* loop until the game over */
 	{
 		InitMap();
 		SetSnakeNum();
@@ -165,28 +185,28 @@ void StartGame()
 		EatFood();
 		PrintMap();
 		StartMsg();
-		Sleep(SPEED);
+		Sleep(1000/speed);
 		system("cls");
 	}
 }
 
-void SetMoveNum()
+void SetMoveNum()        /* algorithm of the start animation, some complex */
 {
 	/* x move 1 -- (X - 2 ); y move 1 -- (Y - 2) */
 	/* move x from left to right */
-	if ((moveY == 1 + moveFlag) && (moveX < X - 2 - moveFlag))
+	if ((moveY == 1 + moveFlag) && (moveX < inputX - 2 - moveFlag))
 	{
 		mapArr[moveX][moveY] = 2;
 		moveX++;
 	}
 	/* move y from top to buttom */
-	else if ((moveX == X - 2 - moveFlag) && (moveY < Y - 2 - moveFlag))
+	else if ((moveX == inputX - 2 - moveFlag) && (moveY < inputY - 2 - moveFlag))
 	{
 		mapArr[moveX][moveY] = 2;
 		moveY++;
 	}
 	/* move x from right to left */
-	else if ((moveY == Y - 2 - moveFlag) && (moveX > 1 + moveFlag))
+	else if ((moveY == inputY - 2 - moveFlag) && (moveX > 1 + moveFlag))
 	{
 		mapArr[moveX][moveY] = 2;
 		moveX--;
@@ -196,20 +216,20 @@ void SetMoveNum()
 	{
 		mapArr[moveX][moveY] = 2;
 		moveY--;
-		if (moveY == 2 + moveFlag)
+		if (moveY == 2 + moveFlag)     /* judge when to jump to a deeper layer */
 		{
 			moveFlag++;
 		}
 	}
 }
 
-void JudgeEnd()
+void JudgeEnd()     /* judge the end of the animation and loop again*/
 {
 	int i, j;
 	int tmp = 1;
-	for (j = 0; j < Y; j++)
+	for (j = 0; j < inputY; j++)
 	{
-		for (i = 0; i < X; i++)
+		for (i = 0; i < inputX; i++)
 		{
 			if (mapArr[i][j] == 0)
 				goto out;
@@ -221,31 +241,40 @@ void JudgeEnd()
 out:;
 }
 
-void StartView()
+void StartView()       /* start the start animation view */
 {
-	moveX = 1, moveY = 1;
+	moveX = 1, moveY = 1, moveFlag = 0;
 	int startFlag = 1;
 	InitMap();
 	while (startFlag)
 	{
 		SetMoveNum();
 		PrintMap();
-		printf("Press any key to start game: \n");
+		printf("按任意键开始游戏：\n(Press any key to start game: )\n");
 		Sleep(10);
 		system("cls");
 		JudgeEnd();
-		if ((_kbhit()) && ((_getch() != '2') && (_getch() != 'w') && (_getch() != '8') && (_getch() != 's') && (_getch() != '4') && (_getch() != 'a') && (_getch() != '6') && (_getch() != 'd')))
-			startFlag = 0;
+		if (_kbhit())
+		{
+			int c = _getch();
+			if ((c != '2') && (c != 'w') && (c != '8') && (c != 's') && (c != '4') && (c != 'a') && (c != '6') && (c != 'd'))
+				startFlag = 0;
+		}
 	}
 }
 
-int main()
+int main()             /* main function */
 {
 	while (1)
 	{
+		printf("是否修改设置（修改输入“y”,否则按任意键）：\nEdit the game setting or not ? (Press 'y' to edit, or press another key to go on:)\n");
+		if (_getch() == 'y')
+		{
+			GetSet();          
+		}
 		StartView();  /* an animation before game start */
 		StartGame();
-		printf("Game Over !!!\nPress any key to restart: \n");
+		printf("Game Over !!!\n游戏结束，按任意键继续：\n(Press any key to restart: )\n");
 		_getch();
 		overFlag = 1;   /* restart the game by the flag */
 		system("cls");
