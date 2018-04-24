@@ -3,7 +3,7 @@
 #include<conio.h>
 #include<time.h>
 #include<stdlib.h>
-#include<windows.graphics.h>
+#include "public-fun.h"
 #define MAXX 10000                /* define the max width of game space */
 #define MAXY 10000                /* define the max height */
 int speed = 10;                   /* default snake move speed */
@@ -265,18 +265,20 @@ void StartView()       /* start the start animation view */
 
 int main()             /* main function */
 {
-	while (1)
-	{
-		printf("是否修改设置（修改输入“y”,否则按任意键）：\nEdit the game setting or not ? (Press 'y' to edit, or press another key to go on:)\n");
-		if (_getch() == 'y')
-		{
-			GetSet();          
-		}
-		StartView();  /* an animation before game start */
-		StartGame();
-		printf("Game Over !!!\n游戏结束，按任意键继续：\n(Press any key to restart: )\n");
-		_getch();
-		overFlag = 1;   /* restart the game by the flag */
-		system("cls");
-	}
+	//while (1)
+	//{
+	//	printf("是否修改设置（修改输入“y”,否则按任意键）：\nEdit the game setting or not ? (Press 'y' to edit, or press another key to go on:)\n");
+	//	if (_getch() == 'y')
+	//	{
+	//		GetSet();          
+	//	}
+	//	StartView();  /* an animation before game start */
+	//	StartGame();
+	//	printf("Game Over !!!\n游戏结束，按任意键继续：\n(Press any key to restart: )\n");
+	//	_getch();
+	//	overFlag = 1;   /* restart the game by the flag */
+	//	system("cls");
+	//}
+	
+	print();
 }
