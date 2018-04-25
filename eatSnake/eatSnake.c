@@ -8,7 +8,9 @@
 #define MAXX 10000                /* define the max width of game space */
 #define MAXY 10000                /* define the max height */
 
-void InitMap();                   /* initialize the background coordinate system */void PrintMap();                  /* print every point in the arr mapArr to the screen */void StartMsg();                  /* start message */
+void InitMap();                   /* initialize the background coordinate system */
+void PrintMap();                  /* print every point in the arr mapArr to the screen */
+void StartMsg();                  /* start message */
 void GetSet();                    /* judge whether to edit the game setting */
 void SetRandNum();                /* set a random 'food' point in the screen */
 void SetSnakeNum();               /* the most complex and important algorithm of this game */
@@ -263,7 +265,7 @@ void StartView()
 		SetMoveNum();
 		PrintMap();
 		printf("按任意键开始游戏：\n(Press any key to start game: )\n");
-		Sleep(10);
+		Sleep(50);
 		system("cls");
 		JudgeEnd();
 		if (_kbhit())
@@ -277,20 +279,20 @@ void StartView()
 
 int main()             /* main function */
 {
-	while (1)
-	{
-		printf("是否修改设置（修改输入“y”,否则按任意键）：\nEdit the game setting or not ? (Press 'y' to edit, or press another key to go on:)\n");
-		if (_getch() == 'y')
-		{
-			GetSet();          
-		}
-		StartView();  /* an animation before game start */
-		StartGame();
-		printf("Game Over !!!\n游戏结束，按任意键继续：\n(Press any key to restart: )\n");
-		_getch();
-		overFlag = 1;   /* restart the game by the flag */
-		system("cls");
-	}
+	//while (1)
+	//{
+	//	printf("是否修改设置（修改输入“y”,否则按任意键）：\nEdit the game setting or not ? (Press 'y' to edit, or press another key to go on:)\n");
+	//	if (_getch() == 'y')
+	//	{
+	//		GetSet();          
+	//	}
+	//	StartView();  /* an animation before game start */
+	//	StartGame();
+	//	printf("Game Over !!!\n游戏结束，按任意键继续：\n(Press any key to restart: )\n");
+	//	_getch();
+	//	overFlag = 1;   /* restart the game by the flag */
+	//	system("cls");
+	//}
 	
-	//print();
+	
 } 
