@@ -279,20 +279,18 @@ void StartView()
 
 int main()             /* main function */
 {
-	//while (1)
-	//{
-	//	printf("是否修改设置（修改输入“y”,否则按任意键）：\nEdit the game setting or not ? (Press 'y' to edit, or press another key to go on:)\n");
-	//	if (_getch() == 'y')
-	//	{
-	//		GetSet();          
-	//	}
-	//	StartView();  /* an animation before game start */
-	//	StartGame();
-	//	printf("Game Over !!!\n游戏结束，按任意键继续：\n(Press any key to restart: )\n");
-	//	_getch();
-	//	overFlag = 1;   /* restart the game by the flag */
-	//	system("cls");
-	//}
-	
-	
+	while (1)
+	{
+		printf("是否修改设置（修改输入“y”,否则按任意键）：\nEdit the game setting or not ? (Press 'y' to edit, or press another key to go on:)\n");
+		if (_getch() == 'y')
+		{
+			GetSet();          
+		}
+		StartView();  /* an animation before game start */
+		StartGame();
+		printf("Game Over !!!\n游戏结束，按任意键继续：\n(Press any key to restart: )\n");
+		_getch();
+		overFlag = 1;   /* restart the game by the flag */
+		system("cls");
+	}
 } 
