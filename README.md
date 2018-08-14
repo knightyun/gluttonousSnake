@@ -1,3 +1,3 @@
-# gluttonousSnake
-the C source code of Gluttonous Snake
-Ì°³ÔÉßCÓïÑÔÔ´´úÂë
+# è´ªåƒè›‡Cè¯­è¨€æºä»£ç 
+
+the C source codes of Gluttonous Snake application.
